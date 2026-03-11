@@ -35,13 +35,34 @@ export default function UploadPage() {
 
   const total = items.reduce((sum, item) => sum + (item.price || 0), 0);
 
-  const handleFileSelected = (file: File, url: string) => {
+  const handleFileSelected = async (file: File, url: string) => {
     setPreviewUrl(url);
     setIsDecoding(true);
-    setTimeout(() => {
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await fetch("/api/ocr", { method: "POST", body: formData });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.store) setStore(data.store);
+        if (data.date) setDate(data.date);
+        if (data.time) setTime(data.time);
+        if (data.address) setAddress(data.address);
+        if (data.items && data.items.length > 0) {
+          setItems(data.items.map((item: { name: string; price: number }) => ({
+            name: item.name || "",
+            price: typeof item.price === "number" ? item.price : 0,
+          })));
+        }
+      }
+    } catch {
+      // OCR failed — continue without auto-fill
+    } finally {
       setIsDecoding(false);
       setStep("form");
-    }, 1800);
+    }
   };
 
   const handleSkipUpload = () => {
