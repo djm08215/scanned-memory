@@ -16,10 +16,12 @@ export default function ScannerCursor() {
 
   return (
     <div
-      className="pointer-events-none fixed z-[9999] hidden md:block left-0 right-0"
+      className="pointer-events-none fixed z-[9999] hidden md:block"
       style={{
+        left: position.x,
         top: position.y,
-        transform: "translateY(-50%)",
+        transform: "translate(-50%, -50%)",
+        width: "356px",
         height: "2px",
         background: "#ef4444",
         boxShadow: "0 0 12px rgba(239,68,68,0.9)",
