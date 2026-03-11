@@ -4,6 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { ReceiptEntry, EmotionTag } from "@/lib/types";
 import { emotionConfig, formatKRW } from "@/lib/utils";
 
+const RED_PIN_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">
+  <path d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 26 14 26S28 24.5 28 14C28 6.268 21.732 0 14 0z"
+    fill="#d8342d" stroke="#a01f1a" stroke-width="1.5"/>
+  <circle cx="14" cy="14" r="5.5" fill="white" opacity="0.9"/>
+</svg>
+`;
+
 interface MemoryMapProps {
   receipts: ReceiptEntry[];
 }
@@ -70,29 +78,17 @@ export default function MemoryMap({ receipts }: MemoryMapProps) {
         }).addTo(map);
       });
 
+      // Red pin icon
+      const redPinIcon = L.divIcon({
+        html: RED_PIN_SVG,
+        className: "",
+        iconSize: [28, 40],
+        iconAnchor: [14, 40],
+        popupAnchor: [0, -42],
+      });
+
       // Add receipt pins
       receipts.forEach((receipt) => {
-        const primaryEmotion = receipt.diary.emotion[0] as EmotionTag;
-        const cfg = emotionConfig[primaryEmotion] || emotionConfig.calm;
-
-        // Size based on total (min 12, max 28)
-        const size = Math.min(28, Math.max(12, Math.log(receipt.total) * 2));
-
-        const icon = L.divIcon({
-          html: `<div style="
-            width: ${size}px;
-            height: ${size}px;
-            background: ${cfg.bg};
-            border: 2px solid ${cfg.color};
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-          "></div>`,
-          className: "",
-          iconSize: [size, size],
-          iconAnchor: [size / 2, size / 2],
-        });
-
         const emotionBadges = receipt.diary.emotion.map((e: EmotionTag) => {
           const ec = emotionConfig[e];
           return `<span style="background:${ec.bg};color:${ec.color};font-size:0.55rem;padding:2px 6px;letter-spacing:0.1em;text-transform:uppercase;">${ec.labelKo}</span>`;
@@ -114,7 +110,7 @@ export default function MemoryMap({ receipts }: MemoryMapProps) {
           </div>
         `;
 
-        const marker = L.marker([receipt.location.lat, receipt.location.lng], { icon });
+        const marker = L.marker([receipt.location.lat, receipt.location.lng], { icon: redPinIcon });
         marker.addTo(map);
         marker.bindPopup(popupContent, { maxWidth: 240, className: "receipt-popup" });
         marker.on("click", () => marker.openPopup());
