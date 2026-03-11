@@ -16,16 +16,14 @@ export default function ScannerCursor() {
 
   return (
     <div
-      className="pointer-events-none fixed z-[9999] hidden md:block"
+      className="pointer-events-none fixed z-[9999] hidden md:block left-0 right-0"
       style={{
-        left: position.x,
         top: position.y,
-        transform: "translate(-50%, -50%)",
+        transform: "translateY(-50%)",
+        height: "2px",
+        background: "#ef4444",
+        boxShadow: "0 0 12px rgba(239,68,68,0.9)",
       }}
-    >
-      <div className="h-6 w-16 rounded border-2 border-neutral-900 bg-white/20 backdrop-blur-sm">
-        <div className="mx-1 mt-[9px] h-[2px] bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.85)]" />
-      </div>
-    </div>
+    />
   );
 }
