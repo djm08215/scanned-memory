@@ -5,10 +5,13 @@ import { ReceiptEntry, EmotionTag } from "@/lib/types";
 import { emotionConfig, formatKRW } from "@/lib/utils";
 
 const RED_PIN_SVG = `
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">
-  <path d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 26 14 26S28 24.5 28 14C28 6.268 21.732 0 14 0z"
-    fill="#d8342d" stroke="#a01f1a" stroke-width="1.5"/>
-  <circle cx="14" cy="14" r="5.5" fill="white" opacity="0.9"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="44" viewBox="0 0 24 44">
+  <!-- needle -->
+  <line x1="12" y1="22" x2="12" y2="43" stroke="#7a1a14" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- pin head circle -->
+  <circle cx="12" cy="12" r="11" fill="#d8342d" stroke="#a01f1a" stroke-width="1.5"/>
+  <!-- shine -->
+  <circle cx="8.5" cy="8" r="3.5" fill="white" opacity="0.3"/>
 </svg>
 `;
 
@@ -82,9 +85,9 @@ export default function MemoryMap({ receipts }: MemoryMapProps) {
       const redPinIcon = L.divIcon({
         html: RED_PIN_SVG,
         className: "",
-        iconSize: [28, 40],
-        iconAnchor: [14, 40],
-        popupAnchor: [0, -42],
+        iconSize: [24, 44],
+        iconAnchor: [12, 43],
+        popupAnchor: [0, -46],
       });
 
       // Add receipt pins
