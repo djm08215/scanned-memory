@@ -4,16 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { ReceiptEntry, EmotionTag } from "@/lib/types";
 import { emotionConfig, formatKRW } from "@/lib/utils";
 
-const RED_PIN_SVG = `
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="44" viewBox="0 0 24 44">
-  <!-- needle -->
-  <line x1="12" y1="22" x2="12" y2="43" stroke="#7a1a14" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- pin head circle -->
-  <circle cx="12" cy="12" r="11" fill="#d8342d" stroke="#a01f1a" stroke-width="1.5"/>
-  <!-- shine -->
-  <circle cx="8.5" cy="8" r="3.5" fill="white" opacity="0.3"/>
-</svg>
-`;
 
 interface MemoryMapProps {
   receipts: ReceiptEntry[];
@@ -82,12 +72,11 @@ export default function MemoryMap({ receipts }: MemoryMapProps) {
       });
 
       // Red pin icon
-      const redPinIcon = L.divIcon({
-        html: RED_PIN_SVG,
-        className: "",
-        iconSize: [24, 44],
-        iconAnchor: [12, 43],
-        popupAnchor: [0, -46],
+      const redPinIcon = L.icon({
+        iconUrl: "/images/pngwing.com.png",
+        iconSize: [40, 60],
+        iconAnchor: [20, 58],
+        popupAnchor: [0, -62],
       });
 
       // Add receipt pins
