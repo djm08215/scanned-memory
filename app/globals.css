@@ -1,26 +1,284 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #e9e1d4;
+  --bg-red: #d8342d;
+  --paper: #f4efe5;
+  --ink: #171717;
+  --muted: #6d675f;
+  --line: rgba(23, 23, 23, 0.08);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.receipt-mono {
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* Paper texture noise */
+.paper-noise {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.025) 0.7px, transparent 0.7px);
+  background-size: 6px 6px;
+}
+
+/* Paper texture for receipt cards */
+.paper-texture {
+  background-color: var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f4efe5'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='rgba(0,0,0,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.5' fill='rgba(0,0,0,0.02)'/%3E%3C/svg%3E");
+}
+
+/* Receipt shadows */
+.receipt-shadow {
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.receipt-shadow-dark {
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Receipt edge styling */
+.receipt-edge {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Perforated top/bottom edges */
+.receipt-perforated-top::before {
+  content: "";
+  display: block;
+  height: 12px;
+  background-image: radial-gradient(circle at 50% 100%, #e9e1d4 6px, transparent 6px);
+  background-size: 16px 12px;
+  background-repeat: repeat-x;
+  margin-bottom: -1px;
+}
+
+.receipt-perforated-bottom::after {
+  content: "";
+  display: block;
+  height: 12px;
+  background-image: radial-gradient(circle at 50% 0%, #e9e1d4 6px, transparent 6px);
+  background-size: 16px 12px;
+  background-repeat: repeat-x;
+  margin-top: -1px;
+}
+
+/* Dark perforated for dark backgrounds */
+.receipt-perf-dark-top::before {
+  content: "";
+  display: block;
+  height: 12px;
+  background-image: radial-gradient(circle at 50% 100%, #0f0f0f 6px, transparent 6px);
+  background-size: 16px 12px;
+  background-repeat: repeat-x;
+}
+
+.receipt-perf-dark-bottom::after {
+  content: "";
+  display: block;
+  height: 12px;
+  background-image: radial-gradient(circle at 50% 0%, #0f0f0f 6px, transparent 6px);
+  background-size: 16px 12px;
+  background-repeat: repeat-x;
+}
+
+/* Dashed divider */
+.receipt-dashed {
+  border-top: 1.5px dashed rgba(23, 23, 23, 0.25);
+}
+
+/* Scanner cursor */
+.hide-native-cursor {
+  cursor: none;
+}
+
+/* Navigation */
+.nav-link {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 229, 0.55);
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: rgba(244, 239, 229, 0.9);
+}
+
+.nav-link.active {
+  color: #d8342d;
+}
+
+/* Map styles */
+.leaflet-container {
+  background: #1a1a1a;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  font-family: "Courier New", Courier, monospace;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-tip {
+  background: var(--paper);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 180px;
+}
+
+/* Receipt pin pulse animation */
+@keyframes pin-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(216, 52, 45, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(216, 52, 45, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(216, 52, 45, 0);
+  }
+}
+
+.receipt-pin {
+  animation: pin-pulse 2s infinite;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Scan line animation */
+@keyframes scan-line {
+  0% {
+    top: 0%;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.scan-line {
+  animation: scan-line 2s ease-in-out infinite;
+}
+
+/* Fade up animation */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.5s ease forwards;
+}
+
+/* Receipt card hover */
+.receipt-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.receipt-card:hover {
+  transform: translateY(-4px) rotate(0.3deg);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.25),
+    0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Typewriter cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ddd5c8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8afa5;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d8342d;
+}
+
+/* Decode animation */
+@keyframes decode-flicker {
+  0%, 100% { opacity: 1; }
+  25% { opacity: 0.7; }
+  50% { opacity: 1; }
+  75% { opacity: 0.5; }
+}
+
+.decode-effect {
+  animation: decode-flicker 0.3s ease 3;
+}
+
+/* Loading dots */
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+.dot-bounce > span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 50%;
+  animation: dot-bounce 1.4s ease-in-out infinite both;
+}
+
+.dot-bounce > span:nth-child(2) { animation-delay: 0.16s; }
+.dot-bounce > span:nth-child(3) { animation-delay: 0.32s; }
+
+/* Emotion badge base */
+.emotion-badge {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  display: inline-block;
 }
