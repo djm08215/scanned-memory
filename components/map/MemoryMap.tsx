@@ -74,9 +74,9 @@ export default function MemoryMap({ receipts }: MemoryMapProps) {
       // Red pin icon
       const redPinIcon = L.icon({
         iconUrl: "/images/pngwing.com.png",
-        iconSize: [40, 60],
-        iconAnchor: [20, 58],
-        popupAnchor: [0, -62],
+        iconSize: [56, 80],
+        iconAnchor: [28, 78],
+        popupAnchor: [0, -82],
       });
 
       // Add receipt pins
